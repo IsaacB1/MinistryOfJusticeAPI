@@ -1,27 +1,31 @@
 package com.example.minJusticeAPI.controllers;
 
 import com.example.minJusticeAPI.models.Task;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import com.example.minJusticeAPI.repositories.TaskRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
 @RestController
 public class TaskController {
+    @Autowired
     private final TaskRepository taskRepository;
 
-    @Autowired
-    public TaskController(TaskRepository taskRepository) {
+    TaskController(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Task> getExampleCase(@PathVariable Long id) {
-        Optional<Task> task = taskRepository.findById(id);
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
+    @GetMapping("/tasks/{id}")
+    public Task getTaskById(@PathVariable Long id) {
+       return taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));
     }
+    // Create a new task
+    @PostMapping
+    public Task createTask(@RequestBody Task task) {
+        return taskRepository.save(task);
+    }
+
 }

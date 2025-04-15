@@ -10,15 +10,12 @@ import jakarta.persistence.Id;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 
 @Entity
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue private Long id;
     private String desc;
     private boolean status;
     private String dueDate;
@@ -30,4 +27,9 @@ public class Task {
     public void setDesc(String newDesc){this.desc = newDesc;}
     public void setStatus(boolean newStatus){this.status= newStatus;}
     public void setDueDate(String newDueDate){this.dueDate = newDueDate;}
+
+    @Override
+    public String toString(){
+        return "Task with id " + this.id + " description - " + this.desc + " Status: " + this.status + " with a due date of " + this.dueDate;
+    }
 }
