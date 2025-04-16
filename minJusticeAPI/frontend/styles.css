@@ -1,0 +1,23 @@
+.li{
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    text-align: left;
+    background-color: antiquewhite;
+
+}
+
+.task-duedate{
+    padding-right: 15px;
+}
+
+.task-desc{
+    padding-right: 15px;
+}
+
+.task-status{
+    padding-right: 15px;
+}
