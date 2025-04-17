@@ -170,7 +170,7 @@ function renderList(){
         editIconDesc.alt = "editDesc"
 
         editIconDesc.addEventListener('click', () => {
-            if(updateDescInput.style.display == "none"){
+            if(updateDescInput.style.display == "none" || updateDescInput.style.display == ""){
                 updateDescInput.style.display = "block";
                 updateDescButt.style.display = "block"
             }else{
@@ -187,9 +187,9 @@ function renderList(){
         editIconDate.classList.add("edit-icon");
         editIconDate.alt = "editDate"
 
-
+        //for editing the date
         editIconDate.addEventListener('click', () => {
-            if(updateDateInput.style.display == "none"){
+            if(updateDateInput.style.display == "none" || updateDateInput.style.display == ""){
                 updateDateInput.style.display = "block";
                 updateDateButt.style.display = "block"
             }else{
@@ -206,8 +206,9 @@ function renderList(){
         editIconStatus.classList.add("edit-icon");
         editIconStatus.alt = "editDate"
 
+        //for showing input fields.
         editIconStatus.addEventListener('click', () => {
-            if(updateStatusInput.style.display == "none"){
+            if(updateStatusInput.style.display == "none" || updateStatusInput.style.display === ""){
                 updateStatusInput.style.display = "block";
                 updateStatusButt.style.display = "block"
             }else{
@@ -222,21 +223,19 @@ function renderList(){
         const updateDescButt = document.createElement('button');
         updateDescButt.id = "newDesc";
         updateDescButt.textContent = "New Description ";
-        updateDescButt.style.marginRight = "15px";
-        updateDescButt.style.height = "30px";
-        updateDescButt.style.display = "none";
+        updateDescButt.classList.add('updateBox')
         li.appendChild(updateDescButt);
 
         const updateDescInput = document.createElement('input');
+        updateDescInput.required
         updateDescInput.id = "newDescInput"
         updateDescInput.type = "text";
-        updateDescInput.style.marginRight = "15px";
-        updateDescInput.style.height = "30px";
-        updateDescInput.style.display = "none";
+        updateDescInput.classList.add('updateBox')
         li.appendChild(updateDescInput);
 
         updateDescButt.addEventListener('click', () => {
-            if(updateDescInput.value == ""){
+            if(updateDescInput.value == "" || updateDateInput.value == null){
+                message("No description given")
                 console.error("No Description enteres")
             }else{
                 updateDesc(item.id,updateDescInput.value);
@@ -247,21 +246,20 @@ function renderList(){
         const updateDateButt = document.createElement('button');
         updateDateButt.id = "newDate";
         updateDateButt.textContent = "New Date ";
-        updateDateButt.style.marginRight = "15px";
-        updateDateButt.style.height = "30px";
-        updateDateButt.style.display = "none";
+        updateDateButt.classList.add('updateBox')
         li.appendChild(updateDateButt);
 
         const updateDateInput = document.createElement('input');
+        updateDateInput.required
         updateDateInput.id = "newDateInput"
         updateDateInput.type = "date";
-        updateDateInput.style.marginRight = "15px";
-        updateDateInput.style.height = "30px";
-        updateDateInput.style.display = "none";
+        updateDateInput.classList.add('updateBox')
         li.appendChild(updateDateInput);
 
         updateDateButt.addEventListener('click', () => {
-            if(updateDateInput.value == ""){
+            console.error(updateDateInput.value);
+            if(updateDateInput.value == "" || updateDateInput.value == null){
+                message("No date given")
                 console.error("Input date, its currently null")
             }else{
                 updateDate(item.id,updateDateInput.value);
@@ -272,9 +270,7 @@ function renderList(){
         const updateStatusButt = document.createElement('button');
         updateStatusButt.id = "newStatus";
         updateStatusButt.textContent = "New Status ";
-        updateStatusButt.style.marginRight = "15px";
-        updateStatusButt.style.height = "30px";
-        updateStatusButt.style.display = "none";
+        updateStatusButt.classList.add('updateBox')
         li.appendChild(updateStatusButt);
 
         const updateStatusInput = document.createElement('select');
@@ -287,13 +283,11 @@ function renderList(){
         updateStatusInput.appendChild(trueOption)
         updateStatusInput.appendChild(falseOption)
         updateStatusInput.id = "newStatusInput"
-        updateStatusInput.style.marginRight = "15px";
-        updateStatusInput.style.height = "30px";
-        updateStatusInput.style.display = "none";
+        updateStatusInput.classList.add('updateBox');
         li.appendChild(updateStatusInput);
 
         updateStatusButt.addEventListener('click', () => {
-            if(updateStatusInput.value == ""){
+            if(updateStatusInput.value == "" || updateDateInput.value == null){
                 console.error("Input date, its currently null")
             }else{
                 console.log(updateStatusInput.value)
@@ -318,22 +312,24 @@ function renderList(){
     });
 }
 
+//for opening/closing the overlay
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById('create-task-select') as HTMLButtonElement;
     const overlay = document.getElementById('addTaskOverlay') as HTMLDivElement;
     if (button) {
         button.addEventListener('click', () => {
             overlay.style.display = (overlay.style.display === "none" || overlay.style.display === "") ? "flex" : "none";
-            createTask('Newtask', '2024/02/25', false);
         });
     }
 });
 
+//For when creatina new task
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById('createTask') as HTMLButtonElement;
     const desc = document.getElementById('desc') as HTMLInputElement;
     const date = document.getElementById('date') as HTMLInputElement;
     const status = document.getElementById('true_false_select') as HTMLSelectElement;
+    const overlay = document.getElementById('addTaskOverlay') as HTMLDivElement;
     if (button) {
         button.addEventListener('click', () => {
             let status_val = true;
@@ -342,10 +338,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }else{
                 status_val = false;
             }
-            createTask(desc.value, date.value, status_val );
+
+            //make sure theres a description
+            if(desc.value == "" || desc.value == null){
+                console.error("Here")
+                message("No description")
+            }else if(date.value == "" || date.value == null){
+                message("No Date")
+            }else{
+                createTask(desc.value, date.value, status_val );
+                overlay.style.display = (overlay.style.display === "none" || overlay.style.display === "") ? "flex" : "none";
+            }
         });
     }
 });
 
+function message(mes:string){
+    const messageBox = document.getElementById("messageBox");
+    if (messageBox) {
+        console.error("Here")
+        messageBox.textContent = mes;
+        messageBox.style.display = "block";
+        setTimeout(() => {
+            messageBox.style.display = "none";
+        },2000);
+    } else {
+        console.error("messageBox element is not found");
+    }
+}
 fetchData();
 getAllTasks();
