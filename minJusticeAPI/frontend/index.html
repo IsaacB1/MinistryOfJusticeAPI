@@ -13,7 +13,19 @@
       </ul>
     </div>
     <div id = "AddTask">
-      <button id = "create-task" >Create New Task</button>
+      <button id = "create-task-select" >+</button>
+    </div>
+
+    <div id = "addTaskOverlay">
+      <input id = "desc" type = "text" placeholder="Description here"  style= "margin-bottom: 20px; height:40px; width: 150px;">
+      <input  id = "date" type = "date" placeholder="Due date here" style= "margin-bottom: 20px; height:40px; width: 150px;">
+      <section id = "true_false">
+        <select id = "true_false_select">
+          <option id = "false" value = "false">False</option>
+          <option id = "true" value = "true">True</option>
+        </select>
+      </section>
+      <button id = createTask>Create Task</button>
     </div>
   </body>
 </html>

@@ -72,9 +72,9 @@ async function createTask(desc:string, dueDate:string,status:boolean){
 async function deleteTask(id: number){
     try{
         const response = await fetch(`http://localhost:8080/tasks/delete/${id}`,{
-            method: "DELETE",  // Ensure DELETE method is used
+            method: "DELETE",  
             headers: {
-                "Content-Type": "application/json", // Typically needed for JSON-based requests
+                "Content-Type": "application/json", 
             },
         });
         if(response.ok){
@@ -87,6 +87,54 @@ async function deleteTask(id: number){
         //put like a thing that goes uop and says deleted succesfully
     }catch(error){
         console.error("Couldnt delete task ", error);
+    }
+}
+
+async function updateDesc(id: number, newDesc: string){
+    try{
+        const response = await fetch(`http://localhost:8080/tasks/update/desc/${id}/${newDesc}`,{
+            method: "PATCH",  
+        });
+        if(response.ok){
+            const index = taskList.findIndex((task) => task.id === id);
+            taskList[index].desc = newDesc;
+            renderList()
+        }
+    }catch(error){
+        console.error("Big error updating Description ", error);
+    }
+}
+
+async function updateDate(id: number, newDate: string){
+    try{
+        const newDueDate = encodeURIComponent(newDate)
+        console.log(newDueDate);
+        const response = await fetch(`http://localhost:8080/tasks/update/dueDate/${id}/${newDueDate}`,{
+            method: "PATCH",
+        });
+        if(response.ok){
+            const index = taskList.findIndex((task) => task.id === id);
+            taskList[index].dueDate = newDueDate;
+            renderList()
+        }
+    }catch(error){
+        console.error("Big error updating due date ", error);
+    }
+}
+
+async function updateStatus(id: number, newStatus: string){
+    try{
+
+        const response = await fetch(`http://localhost:8080/tasks/update/dueDate/${id}/${newStatus}`,{
+            method: "PATCH",
+        });
+        if(response.ok){
+            const index = taskList.findIndex((task) => task.id === id);
+            taskList[index].status = newStatus === "true";
+            renderList()
+        }
+    }catch(error){
+        console.error("Big error updating due date ", error);
     }
 }
 
@@ -109,21 +157,155 @@ function renderList(){
         taskStatus.classList.add('task-status');
 
         if(item.status){
-            taskStatus.textContent+= " completed"
+            taskStatus.style.color = "green";
+            taskStatus.textContent+= " Completed"
         }else{
-            taskStatus.textContent+= " incomplete"
+            taskStatus.style.color = "red";
+            taskStatus.textContent+= " Incomplete"
         }
+        //for edit Icon for description
+        const editIconDesc = document.createElement('img');
+        editIconDesc.src = "/images/edit_image.png";
+        editIconDesc.classList.add("edit-icon");
+        editIconDesc.alt = "editDesc"
+
+        editIconDesc.addEventListener('click', () => {
+            if(updateDescInput.style.display == "none"){
+                updateDescInput.style.display = "block";
+                updateDescButt.style.display = "block"
+            }else{
+                updateDescInput.style.display = "none";
+                updateDescButt.style.display = "none"
+            }
+        });
+        li.appendChild(editIconDesc);
+
         li.appendChild(taskDesc);
+
+        const editIconDate = document.createElement('img');
+        editIconDate.src = "/images/edit_image.png";
+        editIconDate.classList.add("edit-icon");
+        editIconDate.alt = "editDate"
+
+
+        editIconDate.addEventListener('click', () => {
+            if(updateDateInput.style.display == "none"){
+                updateDateInput.style.display = "block";
+                updateDateButt.style.display = "block"
+            }else{
+                updateDateInput.style.display = "none";
+                updateDateButt.style.display = "none"
+            }
+        });
+        li.appendChild(editIconDate);
+
         li.appendChild(taskDueDate);
+
+        const editIconStatus = document.createElement('img');
+        editIconStatus.src = "/images/edit_image.png";
+        editIconStatus.classList.add("edit-icon");
+        editIconStatus.alt = "editDate"
+
+        editIconStatus.addEventListener('click', () => {
+            if(updateStatusInput.style.display == "none"){
+                updateStatusInput.style.display = "block";
+                updateStatusButt.style.display = "block"
+            }else{
+                updateStatusInput.style.display = "none";
+                updateStatusButt.style.display = "none"
+            }
+        });
+        li.appendChild(editIconStatus);
         li.appendChild(taskStatus);
 
+        //update description 
+        const updateDescButt = document.createElement('button');
+        updateDescButt.id = "newDesc";
+        updateDescButt.textContent = "New Description ";
+        updateDescButt.style.marginRight = "15px";
+        updateDescButt.style.height = "30px";
+        updateDescButt.style.display = "none";
+        li.appendChild(updateDescButt);
+
+        const updateDescInput = document.createElement('input');
+        updateDescInput.id = "newDescInput"
+        updateDescInput.type = "text";
+        updateDescInput.style.marginRight = "15px";
+        updateDescInput.style.height = "30px";
+        updateDescInput.style.display = "none";
+        li.appendChild(updateDescInput);
+
+        updateDescButt.addEventListener('click', () => {
+            if(updateDescInput.value == ""){
+                console.error("No Description enteres")
+            }else{
+                updateDesc(item.id,updateDescInput.value);
+            }
+        });
+
+        //update due date
+        const updateDateButt = document.createElement('button');
+        updateDateButt.id = "newDate";
+        updateDateButt.textContent = "New Date ";
+        updateDateButt.style.marginRight = "15px";
+        updateDateButt.style.height = "30px";
+        updateDateButt.style.display = "none";
+        li.appendChild(updateDateButt);
+
+        const updateDateInput = document.createElement('input');
+        updateDateInput.id = "newDateInput"
+        updateDateInput.type = "date";
+        updateDateInput.style.marginRight = "15px";
+        updateDateInput.style.height = "30px";
+        updateDateInput.style.display = "none";
+        li.appendChild(updateDateInput);
+
+        updateDateButt.addEventListener('click', () => {
+            if(updateDateInput.value == ""){
+                console.error("Input date, its currently null")
+            }else{
+                updateDate(item.id,updateDateInput.value);
+            }
+        });
+
+        //now for true/false status
+        const updateStatusButt = document.createElement('button');
+        updateStatusButt.id = "newStatus";
+        updateStatusButt.textContent = "New Status ";
+        updateStatusButt.style.marginRight = "15px";
+        updateStatusButt.style.height = "30px";
+        updateStatusButt.style.display = "none";
+        li.appendChild(updateStatusButt);
+
+        const updateStatusInput = document.createElement('select');
+        const trueOption = document.createElement('option');
+        const falseOption = document.createElement('option');
+        trueOption.value = "true";
+        falseOption.value = "false"
+        trueOption.innerHTML = "true";
+        falseOption.innerHTML = "false"
+        updateStatusInput.appendChild(trueOption)
+        updateStatusInput.appendChild(falseOption)
+        updateStatusInput.id = "newStatusInput"
+        updateStatusInput.style.marginRight = "15px";
+        updateStatusInput.style.height = "30px";
+        updateStatusInput.style.display = "none";
+        li.appendChild(updateStatusInput);
+
+        updateStatusButt.addEventListener('click', () => {
+            if(updateStatusInput.value == ""){
+                console.error("Input date, its currently null")
+            }else{
+                console.log(updateStatusInput.value)
+                updateStatus(item.id, updateStatusInput.value);
+            }
+        });
+
+        //for delete icon too
         const deleteIcon = document.createElement('img');
         deleteIcon.src = "/images/delete_icon.png";
-        deleteIcon.style.width = '20px';
-        deleteIcon.style.height =  'auto';
-        deleteIcon.style.marginLeft = '0';
+        deleteIcon.classList.add("delete-icon")
         deleteIcon.alt = "Delete"
-        deleteIcon.style.cursor = 'pointer';
         deleteIcon.addEventListener('click', () => {
             deleteTask(item.id);
         });
@@ -137,10 +319,30 @@ function renderList(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const button = document.getElementById('create-task') as HTMLButtonElement;
+    const button = document.getElementById('create-task-select') as HTMLButtonElement;
+    const overlay = document.getElementById('addTaskOverlay') as HTMLDivElement;
     if (button) {
         button.addEventListener('click', () => {
-        createTask('Newtask', '2024/02/25', false);
+            overlay.style.display = (overlay.style.display === "none" || overlay.style.display === "") ? "flex" : "none";
+            createTask('Newtask', '2024/02/25', false);
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const button = document.getElementById('createTask') as HTMLButtonElement;
+    const desc = document.getElementById('desc') as HTMLInputElement;
+    const date = document.getElementById('date') as HTMLInputElement;
+    const status = document.getElementById('true_false_select') as HTMLSelectElement;
+    if (button) {
+        button.addEventListener('click', () => {
+            let status_val = true;
+            if(status.value){
+                status_val = true;
+            }else{
+                status_val = false;
+            }
+            createTask(desc.value, date.value, status_val );
         });
     }
 });

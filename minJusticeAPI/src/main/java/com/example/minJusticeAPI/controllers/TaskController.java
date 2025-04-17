@@ -42,23 +42,25 @@ public class TaskController {
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }
-
-    @PostMapping("/update/desc/{id}")
-    public void updateDesc(@PathVariable Long id, String newDesc){
+    @PatchMapping("/update/desc/{id}/{newDesc}")
+    public void updateDesc(@PathVariable Long id, @PathVariable String newDesc){
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));
         task.setDesc(newDesc);
+        taskRepository.save(task);
     }
 
-    @PostMapping("/update/dueDate/{id}")
-    public void updateDueDate(@PathVariable Long id, String dueDate){
+    @PatchMapping("/update/dueDate/{id}/{newDueDate}")
+    public void updateDueDate(@PathVariable Long id, @PathVariable String newDueDate){
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));
-        task.setDueDate(dueDate);
+        task.setDueDate(newDueDate);
+        taskRepository.save(task);
     }
 
-    @PostMapping("/update/status/{id}")
-    public void updateDesc(@PathVariable Long id, boolean newStatus){
+    @PatchMapping("/update/status/{id}/{newStatus}")
+    public void updateStatus(@PathVariable Long id, @PathVariable boolean newStatus){
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));
         task.setStatus(newStatus);
+        taskRepository.save(task);
     }
 
 }
