@@ -42,6 +42,14 @@ public class TaskController {
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }
+
+    @PatchMapping("/update/title/{id}/{newTitle}")
+    public void updateTitle(@PathVariable Long id, @PathVariable String newTitle){
+        Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));
+        task.setTitle(newTitle);
+        taskRepository.save(task);
+    }
+
     @PatchMapping("/update/desc/{id}/{newDesc}")
     public void updateDesc(@PathVariable Long id, @PathVariable String newDesc){
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found with id " + id));

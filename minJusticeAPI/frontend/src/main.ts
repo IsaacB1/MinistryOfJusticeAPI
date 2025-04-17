@@ -1,5 +1,6 @@
 interface Task {
     id: number,
+    title:string,
     desc: string,
     dueDate: string,
     status: boolean,
@@ -38,13 +39,15 @@ async function getAllTasks(){
     }
 }
 
-async function createTask(desc:string, dueDate:string,status:boolean){
-    //for testing
+async function createTask(title:string, desc:string, dueDate:string, status:boolean){
+    console.log(title)
     const newTask = {
+        title: title,
         desc: desc,
         dueDate: dueDate,
         status: status,
     };
+    console.log(newTask)
     try{
         const response = await fetch("http://localhost:8080/tasks/create", {
             method: "POST",
@@ -55,6 +58,7 @@ async function createTask(desc:string, dueDate:string,status:boolean){
         });
         if (response.ok) {
             const data = await response.json(); 
+            console.error(data)
             taskList.push(data);
             renderList();
             console.log("Sucessfully added", data);
@@ -87,6 +91,21 @@ async function deleteTask(id: number){
         //put like a thing that goes uop and says deleted succesfully
     }catch(error){
         console.error("Couldnt delete task ", error);
+    }
+}
+
+async function updateTitle(id: number, newTitle: string){
+    try{
+        const response = await fetch(`http://localhost:8080/tasks/update/title/${id}/${newTitle}`,{
+            method: "PATCH",  
+        });
+        if(response.ok){
+            const index = taskList.findIndex((task) => task.id === id);
+            taskList[index].title = newTitle;
+            renderList()
+        }
+    }catch(error){
+        console.error("Big error updating Description ", error);
     }
 }
 
@@ -145,6 +164,10 @@ function renderList(){
     taskList.forEach(item => {
         const li = document.createElement('li');
         
+        const taskTitle = document.createElement('span');
+        taskTitle.classList.add('task-title');
+        taskTitle.textContent = item.title;
+
         const taskDesc = document.createElement('span');
         taskDesc.classList.add('task-desc');
         taskDesc.textContent = item.desc;
@@ -163,6 +186,26 @@ function renderList(){
             taskStatus.style.color = "red";
             taskStatus.textContent+= " Incomplete"
         }
+
+        //for edit Icon for title
+        const editIconTitle = document.createElement('img');
+        editIconTitle.src = "/images/edit_image.png";
+        editIconTitle.classList.add("edit-icon");
+        editIconTitle.alt = "editTitle"
+
+        editIconTitle.addEventListener('click', () => {
+            if(updateTitleInput.style.display == "none" || updateTitleInput.style.display == ""){
+                updateTitleInput.style.display = "block";
+                updateTitleButt.style.display = "block"
+            }else{
+                updateTitleButt.style.display = "none";
+                updateTitleButt.style.display = "none"
+            }
+        });
+
+        li.appendChild(editIconTitle);
+        li.appendChild(taskTitle);
+
         //for edit Icon for description
         const editIconDesc = document.createElement('img');
         editIconDesc.src = "/images/edit_image.png";
@@ -179,7 +222,6 @@ function renderList(){
             }
         });
         li.appendChild(editIconDesc);
-
         li.appendChild(taskDesc);
 
         const editIconDate = document.createElement('img');
@@ -219,6 +261,29 @@ function renderList(){
         li.appendChild(editIconStatus);
         li.appendChild(taskStatus);
 
+        //update title 
+        const updateTitleButt = document.createElement('button');
+        updateTitleButt.id = "newTitle";
+        updateTitleButt.textContent = "New Title ";
+        updateTitleButt.classList.add('updateBox')
+        li.appendChild(updateTitleButt);
+
+        const updateTitleInput = document.createElement('input');
+        updateTitleInput.required
+        updateTitleInput.id = "newTitleInput"
+        updateTitleInput.type = "text";
+        updateTitleInput.classList.add('updateBox')
+        li.appendChild(updateTitleInput);
+
+        updateTitleButt.addEventListener('click', () => {
+            if(updateTitleInput.value == "" || updateTitleInput.value == null){
+                message("No Title argument")
+            }else{
+                updateTitle(item.id,updateTitleInput.value);
+            }
+        });
+
+    
         //update description 
         const updateDescButt = document.createElement('button');
         updateDescButt.id = "newDesc";
@@ -326,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //For when creatina new task
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.getElementById('createTask') as HTMLButtonElement;
+    const title = document.getElementById('title') as HTMLInputElement;
     const desc = document.getElementById('desc') as HTMLInputElement;
     const date = document.getElementById('date') as HTMLInputElement;
     const status = document.getElementById('true_false_select') as HTMLSelectElement;
@@ -340,13 +406,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             //make sure theres a description
-            if(desc.value == "" || desc.value == null){
-                console.error("Here")
+            if(title.value == "" || title.value == null){
+                message("No title argument provided")
+            }else if(desc.value == "" || desc.value == null){
                 message("No description")
             }else if(date.value == "" || date.value == null){
                 message("No Date")
             }else{
-                createTask(desc.value, date.value, status_val );
+                console.error(title.value)
+                createTask(title.value, desc.value, date.value, status_val );
+
                 overlay.style.display = (overlay.style.display === "none" || overlay.style.display === "") ? "flex" : "none";
             }
         });
