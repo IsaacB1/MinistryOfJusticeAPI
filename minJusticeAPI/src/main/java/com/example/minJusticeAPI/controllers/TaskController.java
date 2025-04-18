@@ -71,4 +71,9 @@ public class TaskController {
         taskRepository.save(task);
     }
 
+    @DeleteMapping
+    public void deleteAll(){
+        taskRepository.deleteAll();
+    }
+
 }
