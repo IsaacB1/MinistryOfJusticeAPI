@@ -32,7 +32,7 @@ public class TaskController {
         }
         return tasks;
     }
-    
+
     @PostMapping("/create")
     public Task createTask(@RequestBody Task task) {
         return taskRepository.save(task);
@@ -71,7 +71,7 @@ public class TaskController {
         taskRepository.save(task);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/deleteAll")
     public void deleteAll(){
         taskRepository.deleteAll();
     }
