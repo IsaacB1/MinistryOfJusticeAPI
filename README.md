@@ -1,6 +1,6 @@
 # Task tracker application
 
-Fullstack:
+### Fullstack Application using:
     Backend:
         - Spring Boot and Java
         - H2 for databse
