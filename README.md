@@ -1,51 +1,91 @@
-# Task tracker application
+# Task Tracker Application
 
-### Fullstack Application using:
-    Backend:
-        - Spring Boot and Java
-        - H2 for databse
-    Frontend:
-        - HTML
-        - CSS
-        - React and Vite to run the server
-        - Typescript
+A fullstack web application for managing tasks.
+
+---
+
+### Built With
+
+**Backend:**
+- Spring Boot & Java
+- H2 in-memory database
+
+**Frontend:**
+- HTML & CSS
+- React (with Vite)
+- TypeScript
+
+---
 
 ## Prerequisites
-    - Java 17+
-    - Maven, for spring boot
-    - Node.js and npm to run frontend server 
 
-## Project Structure:
-    - All frontend code in frontend folder
-    - src --|--- main
-            |--- tests
-    - main Java code in main
-    - tests in tests!
+Make sure you have the following installed:
 
-## To run:
-    - To run the frontend server go to frontend server
-        - cd min minJusticeAPI/frontend
-        - run command npm run dev
-    - To run the backend server go to where mvnw is lcoated
-        - cd minJusticeAPI
-        - Then run commant to start the backend server `./mvnw spring-boot:run`
-    - Then go to local host http://localhost:5173 and click the green button to get started
+- Java 17+
+- Maven (for Spring Boot)
+- Node.js and npm (for frontend)
+
+---
+
+## Project Structure
+
+<pre>
+minJusticeAPI/ <br>
+    ├── frontend/ # All frontend code <br> 
+    ├── src/<br>
+        ├── main/ # Main Java code<br>
+        ├── tests/ # Unit tests
+</pre>
+
+---
+
+## Running the Application
+
+### Frontend
+
+```
+# Navigate to the frontend folder
+cd minJusticeAPI/frontend
+
+# Run the frontend server
+npm run dev
+
+# Navigate to the root directory where mvnw is located
+cd minJusticeAPI
+
+# Run the Spring Boot backend server
+./mvnw spring-boot:run
+
+Once both servers are running, visit:
+http://localhost:5173
+```
 
 ## Tests
-    - Tests are writted in JUnit, and can be run via `./mvnw test` when in the minJusticeAPI directory. 
-    - There are 7 unit tests written for the behaviours:
-        - Getting a task by ID
-        - Getting all tasks
-        - Updating each field
-            - Title
-            - Description
-            - Due Date
-            - Status
-        - Deleting a task
+Tests are writted in JUnit, and can be run via `./mvnw test` when in the minJusticeAPI directory. 
+There are 7 unit tests written for the behaviours:
+- Getting a task by ID
+- Getting all tasks
+- Updating each field
+  - Title
+  - Description
+  - Due Date
+  - Status
+  - Deleting a task
 
 ## Features
-    - You can create/delete and edit tasks, all tasks have a title, description, due data and a boolean variabel completed
+- You can:
+  - Create tasks
+  - Delete tasks
+  - Update each field of the task
 
-## API End Points 
-
+## API Endpoints
+- GET /tasks/all #Gets all tasks.
+- GET /tasks/{id} #Gets a task via its id.
+- POST /tasks/create #Creates a task, takes a json version of a task.
+- DELETE /tasks/delete/{id} #Deletes a task given its id.
+- PATCH /tasks/update/title/{id}/{newTitle} #Updates the title of the task given its id and a new title (String)
+- PATCH /tasks/update/desc/{id}/{newDesc} #Updates the description of the task given its id and a new description (String)
+- PATCH /tasks/update/dueDate/{id}/{newDueDate} #Updates the due date of the task given its id and a new due date (String)
+- PATCH /tasks/update/status/{id}/{newStatus} #Updates the status the task given its id and a new status (boolean)
+- DELETE /deleteAll #Deletes the entire database
 
