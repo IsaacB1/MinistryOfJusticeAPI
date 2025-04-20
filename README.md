@@ -28,11 +28,11 @@
         - run command npm run dev
     - To run the backend server go to where mvnw is lcoated
         - cd minJusticeAPI
-        - Then run commant to start the backend server ./mvnw spring-boot:run
+        - Then run commant to start the backend server `./mvnw spring-boot:run`
     - Then go to local host http://localhost:5173 and click the green button to get started
 
 ## Tests
-    - Tests are writted in JUnit, and can be run via ./mvnw test when in the minJusticeAPI directory. 
+    - Tests are writted in JUnit, and can be run via `./mvnw test` when in the minJusticeAPI directory. 
     - There are 7 unit tests written for the behaviours:
         - Getting a task by ID
         - Getting all tasks
